@@ -11,14 +11,13 @@ RUN             mkdir -p ${MAVEN_HOME}  ${MAVEN_HOME}/localRepository \
                 && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
                 && tar -xzf /tmp/apache-maven.tar.gz -C ${MAVEN_HOME} --strip-components=1 \
                 && ls ${MAVEN_HOME} \
+		&& mkdir -p /opt/maven/localRepository \
                 && rm -f /tmp/apache-maven.tar.gz \
                 && ln -s ${MAVEN_HOME}/bin/mvn /usr/bin/mvn
 
 
 COPY            settings.xml ${MAVEN_HOME}/conf/
-RUN             groupadd -r maven && useradd -r -g maven maven \
-                && chown -R maven:maven ${MAVEN_HOME}
 
-USER            maven
+USER            root
 
-ENTRYPOINT [ "mvn -v" ]
+CMD             [ "mvn -v" ]
